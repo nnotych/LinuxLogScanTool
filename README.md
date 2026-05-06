@@ -109,6 +109,8 @@ man logscan
 ls -l /usr/local/bin/logscan
 ls -l /usr/local/share/man/man1/logscan.1
 ```
+![Uploading зображення.png…]()
+
 
 > Note: The installer script does not itself document runtime CLI flags. Use `logscan --help` or `man logscan` (if installed) to see the exact runtime options provided by the compiled binary.
 
