@@ -1,6 +1,6 @@
 # Logscan
 
-**Logscan** is a small command‑line utility in this repository. This README describes exactly what is in the repo, how the provided `install.sh` behaves, and how to **build**, **install**, **use**, **verify**, and **uninstall** the utility. No features are invented — everything below reflects the repository layout and the installer script behavior.
+**Logscan** is a small command‑line utility in this repository. 
 
 ---
 
