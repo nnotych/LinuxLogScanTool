@@ -1,0 +1,163 @@
+.\" Manpage for logscan
+.TH LOGSCAN 1 "06 May 2026" "logscan 1.0" "User Commands"
+.SH NAME
+logscan \- fast line search in logs with an optional interactive viewer
+.SH SYNOPSIS
+.B logscan
+.I <logdir> <keyword>
+[\-i] [\-c] [\-w] [\-f <file>] [\-I | \-\-interactive] [\-h | \-\-help]
+.SH DESCRIPTION
+.B logscan
+searches for lines containing the specified
+.I keyword
+in all regular files inside the directory
+.I logdir
+(non‑recursive) and prints matching lines to standard output.
+
+By default the search is case‑insensitive. The tool supports two primary modes:
+.IP "\fBNon‑interactive\fR"
+(the default) — prints matched lines exactly as they appear in files (cat‑style), suitable for piping to other tools.
+.IP "\fBInteractive\fR"
+(the \-I or \-\-interactive flag) — opens a simple ncurses‑based viewer to navigate matches, open the source file in an external editor at the matched line, and optionally filter results by file.
+
+.SH OPTIONS
+.TP
+.B \-i
+Case‑insensitive search (default).
+.TP
+.B \-c
+Case‑sensitive search.
+.TP
+.B \-w
+Whole‑word match. Match only when the keyword appears as a separate word (word boundaries are alphanumeric characters and underscore).
+.TP
+.B \-f <file>
+Scan only the file named \fIfile\fR (basename) inside \fIlogdir\fR.
+.TP
+.B \-I, \-\-interactive
+Enable interactive navigation of matches (ncurses viewer).
+.TP
+.B \-h, \-\-help
+Show brief help and exit.
+
+.SH INTERACTIVE MODE
+The interactive mode provides a compact text UI for browsing matches.
+
+Controls:
+.IP
+\- \fBj\fR or Down arrow — move to next match
+.IP
+\- \fBk\fR or Up arrow — move to previous match
+.IP
+\- \fBn\fR / \fBp\fR — jump to next / previous match
+.IP
+\- \fBEnter\fR or \fBo\fR — open external editor at the current line
+.IP
+\- \fBq\fR — quit interactive mode
+
+When opening an editor the program prompts for a choice:
+.IP
+\- \fB1\fR — open \fBnano\fR
+.IP
+\- \fB2\fR — open \fBvim\fR
+.IP
+\- \fB3\fR — enter a custom editor command
+.IP
+\- empty input — use the value of the environment variable \fB$EDITOR\fR; if \fB$EDITOR\fR is not set, a fallback editor (\fBvi\fR) is used.
+
+The interactive viewer saves and restores terminal state correctly around the external editor. After returning from the editor the viewer filters results to show only matches from the file that was opened.
+
+.SH EXAMPLES
+.TP
+.B Non‑interactive example
+Print all lines containing the word \fIERROR\fR (case‑sensitive, whole‑word):
+.RS
+.nf
+./logscan /var/log ERROR -w -c
+.fi
+.RE
+.TP
+.B Interactive example
+Browse matches and open a file in an editor:
+.RS
+.nf
+./logscan /var/log ERROR -I -w -c
+.fi
+.RE
+.TP
+.B Scan a single file
+Search only in \fIsyslog\fR:
+.RS
+.nf
+./logscan /var/log ERROR -f syslog -w -c
+.fi
+.RE
+
+.SH EXIT STATUS
+The program exits with status:
+.IP
+\- \fB0\fR if one or more matches were found (or interactive session ran and exited normally).
+.IP
+\- \fB1\fR if no matches were found or if incorrect usage occurred.
+.IP
+\- \fB2\fR for runtime errors (I/O, memory allocation, permission errors).
+
+.SH FILES
+.TP
+.B /usr/local/share/man/man1/logscan.1
+Man page (if installed).
+.TP
+.B /usr/local/bin/logscan
+Suggested install location for the binary.
+
+.SH INSTALLATION
+To install the man page:
+.RS
+.nf
+sudo cp logscan.1 /usr/local/share/man/man1/
+sudo mandb
+.fi
+.RE
+If \fBmandb\fR is not available, compress and copy:
+.RS
+.nf
+sudo gzip -c logscan.1 > /usr/local/share/man/man1/logscan.1.gz
+.fi
+.RE
+
+To install the binary (example):
+.RS
+.nf
+sudo install -m 0755 ./logscan /usr/local/bin/logscan
+.fi
+.RE
+
+.SH NOTES
+.B Terminal and editor behavior
+The interactive viewer saves the terminal state before launching an external editor and restores it after the editor exits. If you see garbled characters after returning from an editor, run:
+.RS
+.nf
+reset
+stty sane
+.fi
+.RE
+
+.B Matching behavior
+The program searches the entire text of each log line. If a keyword appears inside metadata fields (for example \fICOMMAND=\fR or \fISUDO:\fR), those lines will match. To exclude such lines, pipe the output through filters, for example:
+.RS
+.nf
+./logscan /var/log ERROR -w -c | grep -v 'COMMAND=' | grep -v 'sudo:'
+.fi
+.RE
+
+.SH BUGS
+Report issues (navigation problems, encoding issues, incorrect matches) with sample input and exact commands used.
+
+.SH SEE ALSO
+.BR grep (1),
+.BR rg (1),
+.BR less (1),
+.BR vim (1)
+
+.SH AUTHOR
+Nikita Noty
