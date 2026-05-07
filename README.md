@@ -3,6 +3,9 @@
 **Logscan** is a small command‑line utility in this repository. 
 
 ---
+## Screenshots
+
+![Demo](Scr.jpg)
 
 ## Repository layout
 
