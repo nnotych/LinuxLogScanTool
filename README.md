@@ -47,6 +47,9 @@
 
 ## How to build and install (exact commands)
 
+![Demo](Screenshot 2026-05-07 080942.png)
+
+
 Run these commands from the repository root.
 
 **Clone and prepare**
