@@ -47,7 +47,7 @@
 
 ## How to build and install (exact commands)
 
-![Demo]Screensho42.png)
+![Demo](Screensho42.png)
 
 
 Run these commands from the repository root.
