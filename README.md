@@ -1,6 +1,7 @@
 # Logscan
 
 **Logscan** is a small command‑line utility in this repository. 
+[Demo YouTube](https://www.youtube.com/watch?v=mdsDAGdLHl8)
 
 ---
 ## Screenshots
